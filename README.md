@@ -38,14 +38,14 @@ python Cartpole_train.py --concept_loss_type vanilla_freeze --game CartPole --ac
 python Minigrid_train.py --concept_loss_type vanilla_freeze --game DoorKey --accept_rate 0.1 --num_samples 300 --num_queries 2 --active_learning_bsz 20 --active_learning
 python Minigrid_train.py --concept_loss_type vanilla_freeze --game DynamicObstacles --accept_rate 0.1 --num_samples 300 --num_queries 1 --active_learning_bsz 20 --active_learning
 python Atari_train.py --concept_loss_type vanilla_freeze --game Boxing --accept_rate 0.1 --num_samples 3000 --num_queries 5 --active_learning_bsz 120 --active_learning
-python Atari_train.py --concept_loss_type vanilla_freeze --game Pong --accept_rate 0.1 --num_samples 5000 --num_queries 5 --active_learning_bsz 200 --active_learning
+python Atari_train_viper.py --concept_loss_type vanilla_freeze --game Pong --accept_rate 0.1 --num_samples 5000 --num_queries 5 --active_learning_bsz 200 --active_learning
 ```
 
 For LICORICE in Boxing and Pong with multiple iterations, we can add another RL training stage from scratch with the last trained policy as the anchoring policy, as introduced in section 3 of the paper. After setting the checkpoint path indicated by the variable`expert_model_path` in the code, use these commands.
 
 ```bash
 python Atari_train.py --concept_loss_type finetune_policy --game Boxing --accept_rate 0.1 --num_samples 3000 --num_queries 5 --active_learning_bsz 120 --active_learning
-python Atari_train.py --concept_loss_type finetune_policy --game Pong --accept_rate 0.1 --num_samples 5000 --num_queries 5 --active_learning_bsz 200 --active_learning
+python Atari_train_viper.py --concept_loss_type finetune_policy --game Pong --accept_rate 0.1 --num_samples 5000 --num_queries 5 --active_learning_bsz 200 --active_learning
 ```
 
 ### Run baselines
