@@ -100,9 +100,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = {
-        "total_timesteps": int(4e6),
+        "total_timesteps": int(100000),
         "num_envs": 8,
-        "env_name": "CartPole",
+        "env_name": "PixelCartPole",
         "concept_loss_type": "vanilla_freeze" if args.concept_loss_type is None else args.concept_loss_type,
         "con_coef": 0.5,
         "n_steps": 256*2,
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         "vf_coef": 0.5,
         "share_features_extractor": True,
         "intervention": False,
-        "seed": 0,
+        "seed": 42,
         "accept_rate": args.accept_rate,
         "active_learning": args.active_learning,
         "unlabeled_set_ratio": args.unlabeled_set_ratio,
@@ -184,17 +184,17 @@ if __name__ == "__main__":
 
         # previous ones have different order -- so let's follow that practice
         parts = config["run_name"].split('-')
-        index_4M = parts.index('4M')
-        index_v9 = parts.index('v9')
-        parts.insert(index_v9 + 1, parts.pop(index_4M))
+        index_4M = parts.index('4M') if '4M' in parts else -1
+        index_v9 = parts.index('v9') if 'v9' in parts else -1
+        if index_4M != -1 and index_v9 != -1:
+            parts.insert(index_v9 + 1, parts.pop(index_4M))
         config["run_name"] = '-'.join(parts)
 
     print(config)
     if args.run_id == -1:
         pass
     else:
-        seed_list = [123, 456, 789, 1011, 1213, 1415]
-        config["seed"] = seed_list[args.run_id]
+        config["seed"] = 42
         run = wandb.init(
             project="concept-RL",
             group=config["run_name"],
