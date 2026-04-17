@@ -381,6 +381,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_ensembles', type=int, default=5)
     parser.add_argument('--num_samples', type=int, default=500)
     parser.add_argument('--num_queries', type=int, default=1)
+    parser.add_argument('--grid_size', type=int, default=None)  # <-- THÊM MỚI
 
     args = parser.parse_args()
 
@@ -412,8 +413,9 @@ if __name__ == "__main__":
     num_samples = args.num_samples
     num_queries = args.num_queries
 
-    if config['game'] == 'DoorKey': # larger for 7x7
-        grid_size = 7
+    if config['game'] == 'DoorKey':
+        # Hỗ trợ cả 6x6 và 7x7, mặc định 7x7
+        grid_size = args.grid_size if args.grid_size in [6, 7] else 7
         config["total_timesteps"] = int(4e6)
     elif config['game'] == 'DynamicObstacles':
         grid_size = 5
@@ -522,12 +524,14 @@ if __name__ == "__main__":
         non_vectorized_env = DynamicObstaclesEnvWrapper(non_vectorized_env, ROWS, COLS, config["concept_version"])
         non_vectorized_env.reset(seed=config["seed"])
     if config['game'] == 'DoorKey':
-        register(
-            id="MiniGrid-DoorKey-7x7-v0",
-            entry_point="minigrid.envs:DoorKeyEnv",
-            kwargs={"size": 7},
-        )
-        env_id = f"MiniGrid-DoorKey-{grid_size}x{grid_size}-v0" # 6 or 7
+        # Register cả 6x6 và 7x7
+        for sz in [6, 7]:
+            register(
+                id=f"MiniGrid-DoorKey-{sz}x{sz}-v0",
+                entry_point="minigrid.envs:DoorKeyEnv",
+                kwargs={"size": sz},
+            )
+        env_id = f"MiniGrid-DoorKey-{grid_size}x{grid_size}-v0"
         env = make_vec_env(env_id, n_envs=config["num_envs"], seed=config["seed"], env_kwargs={'highlight': False}, wrapper_class=DoorKeyEnvWrapper, wrapper_kwargs={"ROWS": ROWS, "COLS": COLS})
         non_vectorized_env = gym.make(env_id, render_mode="rgb_array", highlight=False)
         non_vectorized_env = DoorKeyEnvWrapper(non_vectorized_env, ROWS, COLS)
