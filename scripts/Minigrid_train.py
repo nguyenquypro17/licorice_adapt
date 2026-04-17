@@ -25,7 +25,6 @@ def set_random_seed(seed):
         torch.backends.cudnn.benchmark = False
 
 class DynamicObstaclesEnvWrapper(gym.Wrapper):
-    """Wraps the DynamicObstacles environment."""
     def __init__(self, env, ROWS, COLS, concept_version=1):
         super(DynamicObstaclesEnvWrapper, self).__init__(env)
         self.env = env
@@ -125,7 +124,6 @@ class DynamicObstaclesEnvWrapper(gym.Wrapper):
         return img
 
 class DoorKeyEnvWrapper(gym.Wrapper):
-    """Wraps the DoorKey environment."""
     def __init__(self, env, ROWS, COLS):
         super(DoorKeyEnvWrapper, self).__init__(env)
         self.env = env
@@ -205,7 +203,6 @@ class DoorKeyEnvWrapper(gym.Wrapper):
         return img
 
 def train_environment(game_name, grid_size, total_timesteps, seed):
-    """Train a single environment configuration."""
     config = {
         "total_timesteps": total_timesteps,
         "num_envs": 8,
@@ -334,19 +331,18 @@ def train_environment(game_name, grid_size, total_timesteps, seed):
 
 if __name__ == "__main__":
     SEED = 42
-    EPISODES = 1000
 
     print("=" * 80)
-    print("Training: Minigrid DoorKey 6x6 v0")
-    print(f"Episodes: {EPISODES}, Seed: {SEED}")
+    print("Training: Minigrid DoorKey 6x6 v0 (1000 Episodes = 144000 Steps)")
+    print(f"Seed: {SEED}")
     print("=" * 80)
-    train_environment("DoorKey", 6, EPISODES, SEED)
+    train_environment("DoorKey", 6, 144000, SEED)
 
     print("\n" + "=" * 80)
-    print("Training: Minigrid Dynamic Obstacles 5x5 v0")
-    print(f"Episodes: {EPISODES}, Seed: {SEED}")
+    print("Training: Minigrid Dynamic Obstacles 5x5 v0 (1000 Episodes = 100000 Steps)")
+    print(f"Seed: {SEED}")
     print("=" * 80)
-    train_environment("DynamicObstacles", 5, EPISODES, SEED)
+    train_environment("DynamicObstacles", 5, 100000, SEED)
 
     print("\n" + "=" * 80)
     print("All training complete!")
